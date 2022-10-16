@@ -1,3 +1,3 @@
-# Soroban Vault Contract
+# Soroban Lottery Contract
+Code for sorobanathon submission.
 
-Code for the Sorobanathon submission #16: https://github.com/stellar/sorobanathon/discussions/18
