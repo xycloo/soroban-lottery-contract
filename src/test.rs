@@ -85,15 +85,18 @@ fn test() {
         &BigInt::from_u32(&e, 1000),
     );
 
-    // user 1 deposits 5 usdc into vault
+    let price = lottery_vault.get_price();
+    assert_eq!(price, 5);
+
+    // user 1 buys a lottery ticket
     usdc_token.with_source_account(&user1).approve(
         &Signature::Invoker,
         &BigInt::zero(&e),
         &lottery_vault_id,
         &BigInt::from_u32(&e, 5),
     );
-
     lottery_vault.buy_ticket(user1_id.clone());
+
     assert_eq!(
         usdc_token.with_source_account(&admin1).balance(&user1_id),
         995
@@ -105,9 +108,6 @@ fn test() {
             .balance(&lottery_vault_id),
         5
     );
-
-    let price = lottery_vault.get_price();
-    assert_eq!(price, 5);
 
     lottery_vault.run(user1);
     assert_eq!(
@@ -157,9 +157,9 @@ fn test_sequence() {
         BigInt::from_u32(&e, 5),
     ); // registered and initialized the lottery_vault token contract, with usdc as lottery_vault token
 
-    let lottery_vault_id = Identifier::Contract(BytesN::from_array(&e, &lottery_contract_vault)); // the id of the lottery_vault
+    let lottery_vault_id = Identifier::Contract(BytesN::from_array(&e, &lottery_contract_vault)); // the id of the lottery's vault
 
-    // minting 1000 usdc to user1
+    // minting 1000 usdc to all 9 users
     usdc_token.with_source_account(&admin1).mint(
         &Signature::Invoker,
         &BigInt::zero(&e),
@@ -167,7 +167,6 @@ fn test_sequence() {
         &BigInt::from_u32(&e, 1000),
     );
 
-    // minting 1000 usdc to user2
     usdc_token.with_source_account(&admin1).mint(
         &Signature::Invoker,
         &BigInt::zero(&e),
@@ -183,7 +182,6 @@ fn test_sequence() {
         &BigInt::from_u32(&e, 1000),
     );
 
-    // minting 1000 usdc to user1
     usdc_token.with_source_account(&admin1).mint(
         &Signature::Invoker,
         &BigInt::zero(&e),
@@ -191,7 +189,6 @@ fn test_sequence() {
         &BigInt::from_u32(&e, 1000),
     );
 
-    // minting 1000 usdc to user1
     usdc_token.with_source_account(&admin1).mint(
         &Signature::Invoker,
         &BigInt::zero(&e),
@@ -199,7 +196,6 @@ fn test_sequence() {
         &BigInt::from_u32(&e, 1000),
     );
 
-    // minting 1000 usdc to user1
     usdc_token.with_source_account(&admin1).mint(
         &Signature::Invoker,
         &BigInt::zero(&e),
@@ -207,7 +203,6 @@ fn test_sequence() {
         &BigInt::from_u32(&e, 1000),
     );
 
-    // minting 1000 usdc to user1
     usdc_token.with_source_account(&admin1).mint(
         &Signature::Invoker,
         &BigInt::zero(&e),
@@ -215,7 +210,6 @@ fn test_sequence() {
         &BigInt::from_u32(&e, 1000),
     );
 
-    // minting 1000 usdc to user1
     usdc_token.with_source_account(&admin1).mint(
         &Signature::Invoker,
         &BigInt::zero(&e),
@@ -223,7 +217,6 @@ fn test_sequence() {
         &BigInt::from_u32(&e, 1000),
     );
 
-    // minting 1000 usdc to user1
     usdc_token.with_source_account(&admin1).mint(
         &Signature::Invoker,
         &BigInt::zero(&e),
@@ -318,8 +311,10 @@ fn test_sequence() {
 
     lottery_vault.buy_ticket(user9_id.clone());
 
+    // running the lottery, i.e sorting winners and rewarding them
     lottery_vault.run(user1);
 
+    // print logs if you use the log! macro in the contract code
     let logs = e.logger().all();
     std::println!("{}", logs.join("\n"));
 

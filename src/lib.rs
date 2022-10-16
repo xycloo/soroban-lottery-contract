@@ -7,6 +7,8 @@ mod test;
 pub mod testutils;
 
 use soroban_auth::{Identifier, Signature};
+
+#[allow(unused_imports)]
 use soroban_sdk::{contractimpl, contracttype, log, vec, BigInt, BytesN, Env, RawVal, Vec}; // keeping the log import for future debugging work
 
 mod token {
